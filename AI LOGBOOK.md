@@ -5,9 +5,9 @@
 ![Offline](https://shields.io)
 
 > **Tema Pelatihan:** Solusi Digital untuk Kehidupan Sehari-hari Berbantuan Kecerdasan Artifisial  
-> **Nama Siswa:** `[Isi Nama Lengkap Siswa]`  
-> **Kelas / Sekolah:** XI SMA/SMK - `[Isi Nama Sekolah]`  
-> **Link Aplikasi:** `[Isi Link GitHub Pages Siswa]`
+> **Nama Siswa:** `[SILVIYA RIZKI N ANGGRAINI DAN LAEDYSKA TAHTA LAKSANA ZAMRUD]`  
+> **Kelas / Sekolah:** XI SMA/SMK - `[SMKN 2 BLITAR]`  
+
 
 ---
 
