@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <!-- Agar tampilan menyesuaikan ukuran layar HP -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SakuPintar - Asisten Uang Saku</title>
+  <!-- Menghubungkan ke file desain CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <!-- Bagian Judul Aplikasi -->
+    <header>
+      <h1>💰 SakuPintar</h1>
+      <p>Catat jajanmu, wujudkan impianmu!</p>
+    </header>
+
+    <!-- Kartu Menampilkan Total Saldo -->
+    <div id="kartu-saldo" class="card saldo-aman">
+      <span>Sisa Uang Saku Saat Ini:</span>
+      <h2 id="tampilan-saldo">Rp 0</h2>
+    </div>
+
+    <!-- Kotak Penasihat AI Offline -->
+    <div class="card ai-box">
+      <h3>🤖 Saran Asisten AI</h3>
+      <p id="pesan-ai">Halo! Yuk mulai catat pemasukan dan pengeluaranmu hari ini.</p>
+    </div>
+
+    <!-- Form Input Catatan Keuangan -->
+    <form id="form-transaksi" class="card">
+      <h3>Tambah Catatan</h3>
+      
+      <label for="jenis">Jenis Transaksi:</label>
+      <select id="jenis" required>
+        <option value="keluar">Pengeluaran (Jajan/Beli)</option>
+        <option value="masuk">Pemasukan (Uang Saku/Hadiah)</option>
+      </select>
+
+      <label for="keterangan">Keterangan:</label>
+      <input type="text" id="keterangan" placeholder="Contoh: Beli es teh, Uang saku Senin" required>
+
+      <label for="jumlah">Nominal (Rp):</label>
+      <input type="number" id="jumlah" placeholder="Contoh: 10000" min="1" required>
+
+      <button type="submit">Simpan Catatan</button>
+    </form>
+
+    <!-- Daftar Riwayat Transaksi -->
+    <div class="card">
+      <div class="riwayat-header">
+        <h3>Riwayat Transaksi</h3>
+        <button id="btn-hapus-semua" class="btn-danger">Reset</button>
+      </div>
+      <ul id="daftar-riwayat">
+        <!-- Daftar transaksi akan muncul otomatis di sini lewat JavaScript -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- Menghubungkan ke file logika JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
