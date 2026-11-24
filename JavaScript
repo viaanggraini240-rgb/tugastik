@@ -1,0 +1,110 @@
+// Mengambil elemen HTML yang dibutuhkan
+const formTransaksi = document.getElementById('form-transaksi');
+const tampilanSaldo = document.getElementById('tampilan-saldo');
+const kartuSaldo = document.getElementById('kartu-saldo');
+const pesanAI = document.getElementById('pesan-ai');
+const daftarRiwayat = document.getElementById('daftar-riwayat');
+const btnHapusSemua = document.getElementById('btn-hapus-semua');
+
+// Mengambil data dari memori HP (LocalStorage), jika kosong buat array baru
+let dataTransaksi = JSON.parse(localStorage.getItem('sakuPintarData')) || [];
+
+// Fungsi mengubah angka menjadi format Rupiah
+function formatRupiah(angka) {
+  return 'Rp ' + angka.toLocaleString('id-ID');
+}
+
+// Fungsi utama untuk memperbarui layar & menjalankan analisis AI
+function perbaruiTampilan() {
+  daftarRiwayat.innerHTML = '';
+  let totalMasuk = 0;
+  let totalKeluar = 0;
+
+  // Menghitung total pemasukan & pengeluaran serta menampilkan riwayat
+  dataTransaksi.forEach((item) => {
+    if (item.jenis === 'masuk') {
+      totalMasuk += item.jumlah;
+    } else {
+      totalKeluar += item.jumlah;
+    }
+
+    // Membuat baris daftar riwayat baru
+    const li = document.createElement('li');
+    const tanda = item.jenis === 'masuk' ? '+' : '-';
+    const kelasWarna = item.jenis === 'masuk' ? 'teks-masuk' : 'teks-keluar';
+
+    li.innerHTML = `
+      <span>${item.keterangan}</span>
+      <span class="${kelasWarna}">${tanda} ${formatRupiah(item.jumlah)}</span>
+    `;
+    daftarRiwayat.appendChild(li);
+  });
+
+  // Menghitung sisa saldo
+  const saldo = totalMasuk - totalKeluar;
+  tampilanSaldo.textContent = formatRupiah(saldo);
+
+  // Mengubah warna kartu saldo berdasarkan kondisi keuangan
+  kartuSaldo.className = 'card'; // Reset kelas
+  if (saldo <= 0 && totalMasuk > 0) {
+    kartuSaldo.classList.add('saldo-kritis');
+  } else if (totalKeluar > totalMasuk * 0.6) {
+    kartuSaldo.classList.add('saldo-waspada');
+  } else {
+    kartuSaldo.classList.add('saldo-aman');
+  }
+
+  // Menjalankan fungsi AI untuk memberikan saran
+  analisisKeuanganAI(totalMasuk, totalKeluar, saldo);
+}
+
+// Otak AI Sederhana (Rule-Based AI) untuk menganalisis kebiasaan jajan
+function analisisKeuanganAI(masuk, keluar, saldo) {
+  if (dataTransaksi.length === 0) {
+    pesanAI.textContent = "Halo! Yuk mulai catat pemasukan dan pengeluaranmu hari ini.";
+    return;
+  }
+
+  if (saldo < 0) {
+    pesanAI.textContent = "🚨 Bahaya! Pengeluaranmu sudah melebihi pemasukan. Stop jajan dulu dan segera evaluasi catatanmu!";
+  } else if (masuk > 0 && keluar >= masuk * 0.8) {
+    pesanAI.textContent = "⚠️ Hati-hati! Kamu sudah menghabiskan lebih dari 80% uang sakumu. Coba bawa bekal atau air minum dari rumah besok.";
+  } else if (masuk > 0 && keluar >= masuk * 0.5) {
+    pesanAI.textContent = "💡 Lumayan oke, uangmu terpakai setengahnya. Sisihkan sebagian untuk ditabung sebelum terpakai jajan lagi ya!";
+  } else if (saldo > 0) {
+    pesanAI.textContent = "🌟 Keren! Keuanganmu sangat sehat dan terkendali. Pertahankan gaya hidup hemat ini untuk mencapai target tabunganmu!";
+  } else {
+    pesanAI.textContent = "📝 Catatan tersimpan! Jangan lupa masukkan jumlah uang sakumu agar AI bisa menghitung rasio hematmu.";
+  }
+}
+
+// Saat tombol "Simpan Catatan" ditekan
+formTransaksi.addEventListener('submit', function(e) {
+  e.preventDefault(); // Mencegah halaman reload
+
+  const jenis = document.getElementById('jenis').value;
+  const keterangan = document.getElementById('keterangan').value;
+  const jumlah = parseInt(document.getElementById('jumlah').value);
+
+  // Menambahkan data baru ke urutan paling atas
+  dataTransaksi.unshift({ jenis, keterangan, jumlah });
+
+  // Menyimpan ke memori HP (LocalStorage)
+  localStorage.setItem('sakuPintarData', JSON.stringify(dataTransaksi));
+
+  // Mengosongkan form dan memperbarui layar
+  formTransaksi.reset();
+  perbaruiTampilan();
+});
+
+// Saat tombol "Reset" ditekan
+btnHapusSemua.addEventListener('click', function() {
+  if (confirm('Yakin ingin menghapus semua catatan keuangan?')) {
+    dataTransaksi = [];
+    localStorage.removeItem('sakuPintarData');
+    perbaruiTampilan();
+  }
+});
+
+// Jalankan fungsi saat aplikasi pertama kali dibuka
+perbaruiTampilan();
